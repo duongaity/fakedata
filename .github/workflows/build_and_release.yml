@@ -29,7 +29,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           ./mvnw sonar:sonar \
-            -Dsonar.projectKey=your-org_fakedata \
+            -Dsonar.projectKey=fakedata \
             -Dsonar.organization=your-org \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
