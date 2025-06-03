@@ -1,12 +1,20 @@
 name: Build and Release
 
 on:
+  pull_request:
+    branches:
+      - main
+      - develop
+      - 'feature/*'
   push:
-    branches: [ "main" ]
+    branches:
+      - main
+      - develop
 
 jobs:
-  build-test-sonar-docker:
+  build-and-release:
     runs-on: ubuntu-latest
+
     env:
       IMAGE_NAME: duongaity/fakedata
       IMAGE_TAG: ${{ github.run_number }}
@@ -29,26 +37,31 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           ./mvnw sonar:sonar \
-            -Dsonar.projectKey=your-org_fakedata \
-            -Dsonar.organization=your-org \
+            -Dsonar.projectKey=duongaity_fakedata \
+            -Dsonar.organization=duongaity \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
       - name: Log in to DockerHub
-        if: success()
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build Docker image
-        if: success()
         run: |
           docker build -t $IMAGE_NAME:$IMAGE_TAG .
           docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:latest
 
       - name: Push Docker image
-        if: success()
         run: |
           docker push $IMAGE_NAME:$IMAGE_TAG
           docker push $IMAGE_NAME:latest
+
+      - name: Deploy to environment
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: echo "Deploying to PROD environment"
+
+      - name: Deploy to environment (dev)
+        if: github.event_name == 'pull_request'
+        run: echo "Deploying to DEV environment"
