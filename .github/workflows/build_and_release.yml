@@ -12,7 +12,7 @@ on:
       - develop
 
 jobs:
-  build-test-sonar-docker:
+  build-and-release:
     runs-on: ubuntu-latest
 
     env:
