@@ -15,7 +15,7 @@ public class PingController {
     }
 
     @PostMapping
-    public String setPost() {
+    public String sendPost() {
         return "pong";
     }
 
