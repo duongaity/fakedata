@@ -32,6 +32,9 @@ jobs:
 
       - name: Run Unit Tests
         run: ./mvnw test
+      
+      - name: Build JAR
+        run: ./mvnw clean package -DskipTests
 
       # - name: SonarCloud Scan
       #   env:
