@@ -1,9 +1,19 @@
 name: Deploy Terraform Dev
 
 on:
+  workflow_run:
+    workflows: ["build.yml"]
+    types:
+      - completed
+
+  pull_request:
+    branches:
+      - main
+      - develop
   push:
     branches:
-      - dev
+      - main
+      - develop
 
 jobs:
   deploy:
