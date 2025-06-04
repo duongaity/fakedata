@@ -1,0 +1,47 @@
+name: Deploy Terraform Dev
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: us-east-1
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform CLI
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Install Terragrunt
+        run: |
+          curl -L -o terragrunt https://github.com/gruntwork-io/terragrunt/releases/latest/download/terragrunt_linux_amd64
+          chmod +x terragrunt
+          sudo mv terragrunt /usr/local/bin/
+
+      - name: Deploy EKS
+        working-directory: terraform/dev/eks
+        run: terragrunt apply -auto-approve
+
+      - name: Deploy S3
+        working-directory: terraform/dev/s3
+        run: terragrunt apply -auto-approve
+
+      - name: Deploy DynamoDB
+        working-directory: terraform/dev/dynamodb
+        run: terragrunt apply -auto-approve
+
+      - name: Deploy Spring App
+        working-directory: terraform/dev/spring-app
+        run: terragrunt apply -auto-approve
