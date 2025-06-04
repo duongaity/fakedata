@@ -1,4 +1,4 @@
-name: Deploy Terraform Dev
+name: Deploy
 
 on:
   workflow_run:
@@ -41,17 +41,17 @@ jobs:
           sudo mv terragrunt /usr/local/bin/
 
       - name: Deploy EKS
-        working-directory: terraform/dev/eks
+        working-directory: terraform/env/dev/eks
         run: terragrunt apply -auto-approve
 
       - name: Deploy S3
-        working-directory: terraform/dev/s3
+        working-directory: terraform/env/dev/s3
         run: terragrunt apply -auto-approve
 
       - name: Deploy DynamoDB
-        working-directory: terraform/dev/dynamodb
+        working-directory: terraform/env/dev/dynamodb
         run: terragrunt apply -auto-approve
 
       - name: Deploy Spring App
-        working-directory: terraform/dev/spring-app
+        working-directory: terraform/env/dev/spring-app
         run: terragrunt apply -auto-approve
