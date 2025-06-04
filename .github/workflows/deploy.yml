@@ -40,6 +40,9 @@ jobs:
           chmod +x terragrunt
           sudo mv terragrunt /usr/local/bin/
 
+      - name: Check repo files
+        run: ls -R terraform
+
       - name: Deploy EKS
         working-directory: terraform/env/dev/eks
         run: terragrunt apply -auto-approve
