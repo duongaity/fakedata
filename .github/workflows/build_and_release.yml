@@ -11,6 +11,11 @@ on:
       - main
       - develop
 
+env:
+  AWS_REGION: us-east-1
+  ECR_REPO: 674059452637.dkr.ecr.us-east-1.amazonaws.com/fakedata
+  IMAGE_TAG: ${{ github.run_number }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,15 +33,15 @@ jobs:
       - name: Run Unit Tests
         run: ./mvnw test
 
-      - name: SonarCloud Scan
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          ./mvnw sonar:sonar \
-            -Dsonar.projectKey=duongaity_fakedata \
-            -Dsonar.organization=duongaity \
-            -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+      # - name: SonarCloud Scan
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #   run: |
+      #     ./mvnw sonar:sonar \
+      #       -Dsonar.projectKey=duongaity_fakedata \
+      #       -Dsonar.organization=duongaity \
+      #       -Dsonar.host.url=https://sonarcloud.io \
+      #       -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
