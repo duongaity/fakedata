@@ -1,0 +1,63 @@
+name: Build
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+      - 'feature/*'
+  push:
+    branches:
+      - main
+      - develop
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPO: 674059452637.dkr.ecr.us-east-1.amazonaws.com/fakedata
+  IMAGE_TAG: ${{ github.run_number }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Run Unit Tests
+        run: ./mvnw test
+      
+      - name: Build JAR
+        run: ./mvnw clean package -DskipTests
+
+      # - name: SonarCloud Scan
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #   run: |
+      #     ./mvnw sonar:sonar \
+      #       -Dsonar.projectKey=duongaity_fakedata \
+      #       -Dsonar.organization=duongaity \
+      #       -Dsonar.host.url=https://sonarcloud.io \
+      #       -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build Docker image
+        run: docker build -t $ECR_REPO:$IMAGE_TAG .
+
+      - name: Push Docker image
+        run: docker push $ECR_REPO:$IMAGE_TAG

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fakedata
+  labels:
+    app: fakedata
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fakedata
+  template:
+    metadata:
+      labels:
+        app: fakedata
+    spec:
+      containers:
+        - name: fakedata
+          image: duongaity/fakedata:latest
+          ports:
+            - containerPort: 8080
