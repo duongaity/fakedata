@@ -71,16 +71,14 @@ jobs:
         with:
           repository: duongaity/fakedata-gitops
           token: ${{ secrets.GITHUB_TOKEN }}
-          path: fakedata-gitops
 
       - name: Update image tag in values.yaml
         run: |
-          cd fakedata-gitops/nonprod
+          cd nonprod
           sed -i "s/tag: \".*\"/tag: \"${{ github.run_id }}\"/" values.yaml
 
       - name: Commit and push changes
         run: |
-          cd fakedata-gitops
           git config user.name "Duong Aity"
           git config user.email "duongaity@gmail.com"
           git add .
