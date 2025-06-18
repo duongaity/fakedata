@@ -23,6 +23,9 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
+      - name: Set up Git identity
+        uses: ./.github/actions/git-setup
+
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
@@ -100,7 +103,9 @@ jobs:
           sed -i "s/tag: \".*\"/tag: \"${{ github.run_id }}\"/" values.yaml
 
       - name: Set up Git identity
-        uses: ./.github/actions/git-setup
+        run: |
+          git config user.name "Duong Aity"
+          git config user.email "duongaity@gmail.com"
 
       - name: Commit and push changes
         run: |
