@@ -86,5 +86,5 @@ jobs:
           git config user.name "Duong Aity"
           git config user.email "duongaity@gmail.com"
           git add .
-          git commit -m "chore: update image tag to ${{ github.run_id }}"
+          git commit -m "chore: update image tag to ${IMAGE_TAG}"
           git push origin main
