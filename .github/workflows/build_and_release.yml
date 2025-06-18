@@ -23,9 +23,6 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Set up Git identity
-        uses: ./.github/actions/git-setup
-
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
