@@ -2,7 +2,6 @@ package com.duong.fakedata.controller;
 
 import com.duong.fakedata.model.Post;
 import com.duong.fakedata.service.PostService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,8 +14,11 @@ import java.util.List;
 @RequestMapping(value = "/api/posts")
 public class PostController {
 
-    @Autowired
-    private PostService postService;
+    private final PostService postService;
+
+    public PostController(PostService postService) {
+        this.postService = postService;
+    }
 
     @GetMapping
     public ResponseEntity<List<Post>> getFakePosts(@RequestParam(defaultValue = "10") int count) {
