@@ -1,0 +1,9 @@
+name: Setup Git Identity
+description: Configures Git username and email
+
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        git config user.name "Duong Aity"
+        git config user.email "duongaity@gmail.com"

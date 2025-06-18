@@ -99,11 +99,12 @@ jobs:
           cd gitops/$ENV_DIR
           sed -i "s/tag: \".*\"/tag: \"${{ github.run_id }}\"/" values.yaml
 
+      - name: Set up Git identity
+        uses: ./.github/actions/git-setup
+
       - name: Commit and push changes
         run: |
           cd gitops
-          git config user.name "Duong Aity"
-          git config user.email "duongaity@gmail.com"
           git add .
           git commit -m "chore: update image tag to ${{ github.run_id }}"
           git push origin main
