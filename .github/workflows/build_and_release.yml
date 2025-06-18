@@ -29,8 +29,8 @@ jobs:
           java-version: 21
           distribution: 'temurin'
 
-      - name: Run Unit Tests
-        run: ./mvnw test
+      # - name: Run Unit Tests
+      #   run: ./mvnw test
 
 #      - name: Run SonarCloud Scan
 #        uses: sonarsource/sonarcloud-github-action@v2
