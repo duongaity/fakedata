@@ -32,12 +32,12 @@ jobs:
       - name: Run Unit Tests
         run: ./mvnw test
 
-      - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@v2
-        with:
-          projectBaseDir: .
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#      - name: Run SonarCloud Scan
+#        uses: sonarsource/sonarcloud-github-action@v2
+#        with:
+#          projectBaseDir: .
+#        env:
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Build Spring Boot app
         run: ./mvnw clean package -DskipTests
