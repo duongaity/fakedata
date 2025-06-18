@@ -74,7 +74,6 @@ jobs:
 
       - name: List directory structure in fakedata-gitops
         run: |
-          cd fakedata-gitops
           echo "Root level:"
           ls -al
           echo "nonprod contents:"
