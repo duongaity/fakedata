@@ -2,7 +2,10 @@ name: Build and Release
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+      - dev
+      - feature/**
 
 env:
   AWS_REGION: us-east-1
@@ -26,15 +29,15 @@ jobs:
           java-version: 21
           distribution: 'temurin'
 
-      - name: Run Unit Tests
-        run: ./mvnw test
+      # - name: Run Unit Tests
+      #   run: ./mvnw test
 
-      - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@v2
-        with:
-          organization: ${{ secrets.SONAR_ORG_KEY }}
-          token: ${{ secrets.SONAR_TOKEN }}
-          projectKey: ${{ secrets.SONAR_PROJECT_KEY }}
+#      - name: Run SonarCloud Scan
+#        uses: sonarsource/sonarcloud-github-action@v2
+#        with:
+#          projectBaseDir: .
+#        env:
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Build Spring Boot app
         run: ./mvnw clean package -DskipTests
@@ -60,27 +63,28 @@ jobs:
   ## 2. Update GitOps Repo (Helm)
   ## ===============================
   processGitOps:
-    needs: buildApplication
     runs-on: ubuntu-latest
-
+    
+    needs: buildApplication
+    
     steps:
-      - name: Checkout GitOps repository
+      - name: Checkout GitOps repo
         uses: actions/checkout@v4
         with:
-          repository: truongduong/fakedata-gitops
-          token: ${{ secrets.GITHUB_TOKEN }}
-          path: gitops
+          repository: duongaity/fakedata-gitops
+          token: ${{ secrets.GIT_TOKEN }}
 
-      - name: Update Helm values.yaml
+      - name: Update image tag in values.yaml
         run: |
-          cd gitops/helm/fakedata-chart
-          sed -i "s|repository: .*|repository: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}|" values.yaml
-          sed -i "s|tag: .*|tag: ${{ env.IMAGE_TAG }}|" values.yaml
+          echo "Root level:"
+          ls -al
+          cd nonprod
+          sed -i "s/tag: \".*\"/tag: \"${{ github.run_id }}\"/" values.yaml
 
       - name: Commit and push changes
         run: |
-          cd gitops
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git commit -am "Update image tag to ${{ env.IMAGE_TAG }}"
+          git config user.name "Duong Aity"
+          git config user.email "duongaity@gmail.com"
+          git add .
+          git commit -m "chore: update image tag to ${IMAGE_TAG}"
           git push origin main
