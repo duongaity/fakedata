@@ -72,6 +72,14 @@ jobs:
           repository: duongaity/fakedata-gitops
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: List directory structure in fakedata-gitops
+        run: |
+          cd fakedata-gitops
+          echo "Root level:"
+          ls -al
+          echo "nonprod contents:"
+          ls -al nonprod
+
       - name: Update image tag in values.yaml
         run: |
           cd nonprod
