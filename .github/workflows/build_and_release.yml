@@ -35,8 +35,8 @@ jobs:
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@v2
         with:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           organization: ${{ secrets.SONAR_ORG_KEY }}
-          token: ${{ secrets.SONAR_TOKEN }}
           projectKey: ${{ secrets.SONAR_PROJECT_KEY }}
 
       - name: Build Spring Boot app
@@ -70,7 +70,7 @@ jobs:
       - name: Checkout GitOps repository
         uses: actions/checkout@v4
         with:
-          repository: truongduong/fakedata-gitops
+          repository: duongaity/fakedata-gitops
           token: ${{ secrets.GITHUB_TOKEN }}
           path: gitops
 
