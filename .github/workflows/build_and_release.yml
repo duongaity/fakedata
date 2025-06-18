@@ -10,7 +10,7 @@ on:
 env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: fakedata
-  IMAGE_TAG: ${{ github.run_id }}-${{ github.run_attempt }}
+  IMAGE_TAG: ${{ github.run_id }}
 
 jobs:
   ## ===============================
