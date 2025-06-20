@@ -16,8 +16,14 @@ jobs:
       AWS_DEFAULT_REGION: ap-southeast-1
 
     steps:
-      - name: Checkout repo
+      - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Show working directory + list files
+        run: |
+          pwd
+          ls -la
+          ls -R ./terraform
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
