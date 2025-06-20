@@ -2,7 +2,9 @@ name: Deploy Terraform to AWS
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - feature/cicd-prod
 
 jobs:
   terraform:
