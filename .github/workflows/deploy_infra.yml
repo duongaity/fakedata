@@ -1,0 +1,37 @@
+name: Deploy Terraform to AWS
+
+on:
+  push:
+    branches:
+      - main
+      - feature/cicd-prod
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ap-southeast-1
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Show working directory + list files
+        run: |
+          pwd
+          ls -la
+          ls -R ./terraform
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ./terraform/awsdevops
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        working-directory: ./terraform/awsdevops
